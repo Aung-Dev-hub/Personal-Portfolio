@@ -1,26 +1,60 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-display: var(--font-poppins);
+
+  --font-poppins: "Poppins", sans-serif;
+  --font-outfit: "Outfit", sans-serif;
+  --font-playfair: "Playfair Display", serif;
+  --font-urbanist: "Urbanist", sans-serif;
+
+  /* For Animation */
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+
+  font-family: var(--font-poppins);
+
+  color: #fff;
+  background: transparent;
+
+  /* Smooth Font Rendering For Chrome & Safari */
+  -webkit-font-smoothing: antialiased;
+
+  /* Smooth Font Rendering For Firefox & MacOS */
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Fluid Canvas Background */
+.fluid-canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.fluid-canvas-container canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Content above canvas */
+.page-content {
+  position: relative;
+  z-index: 1;
 }
