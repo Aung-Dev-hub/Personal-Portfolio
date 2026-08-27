@@ -3,6 +3,7 @@ import type { NavLink } from "@/types/navbar.type";
 export const navLinks: NavLink[] = [
     { label: "Home", href: "#top" },
     { label: "About", href: "#about" },
+    { label: "Skills", href: "#skills" },
     { label: "Projects", href: "#projects" },
     { label: "Contact", href: "#contact" },
 ];
