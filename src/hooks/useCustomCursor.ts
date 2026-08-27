@@ -1,9 +1,6 @@
 "use client";
 
-import {
-    useEffect,
-    type RefObject,
-} from "react";
+import { useEffect, type RefObject } from "react";
 
 import { cursorData } from "@/data/cursor.data";
 
@@ -16,11 +13,15 @@ import {
 } from "@/libs/cursor.lib";
 
 export default function useCustomCursor(
-    cursorRef: RefObject<HTMLDivElement | null>
+    cursorRef: RefObject<HTMLDivElement | null>,
 ): void {
     useEffect(() => {
-        const initialPosition =
-            getInitialPosition();
+        // Desktop only
+        if (window.innerWidth < 901) {
+            return;
+        }
+
+        const initialPosition = getInitialPosition();
 
         let mouseX = initialPosition.x;
         let mouseY = initialPosition.y;
@@ -28,32 +29,28 @@ export default function useCustomCursor(
         let currentX = mouseX;
         let currentY = mouseY;
 
-        let animationFrame: number | null = null;
-
-        let moveTimeout:
-            ReturnType<typeof setTimeout> | null = null;
+        let animationFrame = 0;
+        let moveTimeout: ReturnType<typeof setTimeout> | undefined;
 
         hideBrowserCursor();
 
-        const handleMouseMove = (
-            event: MouseEvent
-        ): void => {
+        const handleMouseMove = (event: MouseEvent): void => {
             mouseX = event.clientX;
             mouseY = event.clientY;
 
             setCursorColor(
                 cursorRef.current,
-                cursorData.colors.moving
+                cursorData.colors.moving,
             );
 
-            if (moveTimeout !== null) {
+            if (moveTimeout) {
                 clearTimeout(moveTimeout);
             }
 
             moveTimeout = setTimeout(() => {
                 setCursorColor(
                     cursorRef.current,
-                    cursorData.colors.default
+                    cursorData.colors.default,
                 );
             }, cursorData.animation.returnDelay);
         };
@@ -67,23 +64,17 @@ export default function useCustomCursor(
                 (mouseY - currentY) *
                 cursorData.animation.smoothness;
 
-            const cursor = cursorRef.current;
-
-            if (cursor) {
-                cursor.style.transform =
-                    getCursorTransform(
-                        currentX,
-                        currentY
-                    );
+            if (cursorRef.current) {
+                cursorRef.current.style.transform =
+                    getCursorTransform(currentX, currentY);
             }
 
-            animationFrame =
-                requestAnimationFrame(animate);
+            animationFrame = requestAnimationFrame(animate);
         };
 
         document.addEventListener(
             "mousemove",
-            handleMouseMove
+            handleMouseMove,
         );
 
         animationFrame =
@@ -92,16 +83,14 @@ export default function useCustomCursor(
         return () => {
             document.removeEventListener(
                 "mousemove",
-                handleMouseMove
+                handleMouseMove,
             );
 
-            if (animationFrame !== null) {
-                cancelAnimationFrame(
-                    animationFrame
-                );
-            }
+            cancelAnimationFrame(
+                animationFrame,
+            );
 
-            if (moveTimeout !== null) {
+            if (moveTimeout) {
                 clearTimeout(moveTimeout);
             }
 
