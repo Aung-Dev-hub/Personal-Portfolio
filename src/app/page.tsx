@@ -5,9 +5,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import LoadingScreen from "@/components/loading/LoadingScreen";
 import FluidCanvas from "@/components/theme/background/FluidCanvas";
 import CustomCursor from "@/components/ui/customCursor/CustomCursor";
-import Navbar from "@/components/ui/Navbar/Navbar";
-import Hero from "@/components/ui/Hero/Hero";
-import Marquee from "@/components/ui/marquee/Marquee";
+import Navbar from "@/components/layouts/Navbar/Navbar";
+import Hero from "@/components/sections/Hero/Hero";
+import Marquee from "@/components/sections/marquee/Marquee";
+import AboutSection from "@/components/sections/about/AboutSection";
+
 
 export default function Home(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -43,6 +45,7 @@ export default function Home(): React.JSX.Element {
           <main>
             <Hero/>
             <Marquee/>
+            <AboutSection/>
           </main>
         </div>
       </motion.div>
