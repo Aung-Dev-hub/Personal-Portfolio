@@ -19,17 +19,17 @@ export default function useCustomCursor(
     cursorRef: RefObject<HTMLDivElement | null>
 ): void {
     useEffect(() => {
-        const isDesktop = window.matchMedia(
+        const mediaQuery = window.matchMedia(
             "(min-width: 901px)"
-        ).matches;
+        );
 
-        // Mobile / Tablet
-        if (!isDesktop) {
+        if (!mediaQuery.matches) {
             restoreBrowserCursor();
             return;
         }
 
-        const initialPosition = getInitialPosition();
+        const initialPosition =
+            getInitialPosition();
 
         let mouseX = initialPosition.x;
         let mouseY = initialPosition.y;

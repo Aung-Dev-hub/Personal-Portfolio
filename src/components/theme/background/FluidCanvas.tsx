@@ -10,8 +10,8 @@ export default function FluidCanvas() {
   useFluidCanvas(canvasRef);
 
   return (
-    <div className="fluid-canvas-container pointer-events-none">
-      <canvas ref={canvasRef} className="splash-canvas pointer-events-none" />
+    <div className="fluid-canvas-container">
+      <canvas ref={canvasRef} className="splash-canvas" aria-hidden="true" />
     </div>
   );
 }

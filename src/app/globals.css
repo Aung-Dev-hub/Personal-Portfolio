@@ -49,12 +49,64 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100%;
-  pointer-events: none;
+  height: 100vh;
+  display: block;
+  pointer-events: auto;
+  touch-action: pan-y;
 }
 
 /* Content above canvas */
 .page-content {
   position: relative;
   z-index: 1;
+}
+
+/* Mobile + Tablet */
+@media (max-width: 900px) {
+  html,
+  body {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .fluid-canvas-container {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .fluid-canvas-container canvas {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    pointer-events: auto;
+
+    /*
+     * Vertical touch movement is allowed to
+     * scroll the page while the canvas can
+     * still receive the touch position.
+     */
+    touch-action: pan-y;
+  }
+
+  .page-content {
+    position: relative;
+    z-index: 1;
+    min-height: 100dvh;
+  }
+}
+
+/* Desktop */
+@media (min-width: 901px) {
+  .fluid-canvas-container canvas {
+    pointer-events: none;
+    touch-action: none;
+  }
 }
