@@ -1,17 +1,27 @@
 "use client";
 
-import { useRef } from "react";
-
-import useFluidCanvas from "@/hooks/useFluidCanvas";
+import { useEffect, useRef } from "react";
 
 export default function FluidCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  useFluidCanvas(canvasRef);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+
+    if (!canvas) return;
+
+    // Your fluid canvas code...
+
+    return () => {
+      // cleanup...
+    };
+  }, []);
 
   return (
-    <div className="fluid-canvas-container">
-      <canvas ref={canvasRef} className="splash-canvas" />
-    </div>
+    <canvas
+      ref={canvasRef}
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 h-full w-full touch-none min-[901px]:pointer-events-auto"
+    />
   );
 }
