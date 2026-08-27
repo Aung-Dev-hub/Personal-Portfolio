@@ -9,7 +9,7 @@ import Navbar from "@/components/layouts/Navbar/Navbar";
 import Hero from "@/components/sections/Hero/Hero";
 import Marquee from "@/components/sections/marquee/Marquee";
 import AboutSection from "@/components/sections/about/AboutSection";
-
+import SkillsSection from "@/components/sections/skills/SkillSection";
 
 export default function Home(): React.JSX.Element {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -39,13 +39,14 @@ export default function Home(): React.JSX.Element {
       >
         <FluidCanvas />
         <CustomCursor />
-        
+
         <div className="page-content">
-          <Navbar/>
+          <Navbar />
           <main>
-            <Hero/>
-            <Marquee/>
-            <AboutSection/>
+            <Hero />
+            <Marquee />
+            <AboutSection />
+            <SkillsSection />
           </main>
         </div>
       </motion.div>

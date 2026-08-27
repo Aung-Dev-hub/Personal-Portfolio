@@ -5,6 +5,7 @@
         "Framebuffers",
         "highp",
         "mediump",
+        "Nodedotjs",
         "Prefilter",
         "SUNRAYS"
     ]
