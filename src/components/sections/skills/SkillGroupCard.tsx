@@ -19,6 +19,15 @@ export const SkillGroupCard: React.FC<SkillGroupCardProps> = ({
   const isBlurred = hoveredIndex !== null && hoveredIndex !== index;
   const isHovered = hoveredIndex === index;
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (hoveredIndex === index) {
+      setHoveredIndex(null);
+    } else {
+      setHoveredIndex(index);
+    }
+  };
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 35 }}
@@ -26,6 +35,7 @@ export const SkillGroupCard: React.FC<SkillGroupCardProps> = ({
       viewport={{ once: true, amount: 0.15 }}
       onMouseEnter={() => setHoveredIndex(index)}
       onMouseLeave={() => setHoveredIndex(null)}
+      onClick={handleClick}
       animate={{
         scale: isHovered ? 1.04 : isBlurred ? 0.96 : 1,
         y: isHovered ? -8 : 0,
@@ -33,7 +43,7 @@ export const SkillGroupCard: React.FC<SkillGroupCardProps> = ({
         filter: isBlurred ? "blur(3px)" : "blur(0px)",
       }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className={`group relative h-full overflow-hidden rounded-xl p-6 transition-all duration-300 sm:p-7 ${
+      className={`group relative h-full cursor-pointer overflow-hidden rounded-xl p-6 transition-all duration-300 sm:p-7 ${
         isHovered
           ? "border-red-500/50 bg-white/10 shadow-[0_12px_30px_rgba(255,48,48,0.2)] ring-1 ring-red-500/40 backdrop-blur-xl"
           : isBlurred

@@ -7,7 +7,11 @@ const SkillsSection: React.FC = () => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <section id="skills" className="relative px-5 py-32 sm:px-6 md:py-44">
+    <section
+      id="skills"
+      className="relative px-5 py-32 sm:px-6 md:py-44"
+      onClick={() => setHoveredIndex(null)}
+    >
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <motion.div
@@ -32,7 +36,8 @@ const SkillsSection: React.FC = () => {
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="max-w-sm text-sm leading-relaxed text-white/50"
           >
-            Deep in the modern web stack, obsessive about the 5% of polish that makes 95% of the impression.
+            Deep in the modern web stack, obsessive about the 5% of polish that
+            makes 95% of the impression.
           </motion.p>
         </div>
 
