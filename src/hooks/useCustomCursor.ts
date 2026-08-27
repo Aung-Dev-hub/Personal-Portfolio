@@ -1,102 +1,121 @@
 "use client";
 
-import { useEffect, RefObject } from "react";
+import {
+    useEffect,
+    type RefObject,
+} from "react";
 
 import { cursorData } from "@/data/cursor.data";
 
 import {
-  getInitialPosition,
-  getCursorTransform,
-  setCursorColor,
-  hideBrowserCursor,
-  restoreBrowserCursor,
+    getInitialPosition,
+    getCursorTransform,
+    setCursorColor,
+    hideBrowserCursor,
+    restoreBrowserCursor,
 } from "@/libs/cursor.lib";
 
 export default function useCustomCursor(
-  cursorRef: RefObject<HTMLDivElement | null>
+    cursorRef: RefObject<HTMLDivElement | null>
 ): void {
-  useEffect(() => {
-    // Mobile / Tablet မှာ custom mouse cursor မသုံးပါ
-    const isTouchDevice =
-      window.matchMedia("(pointer: coarse)").matches ||
-      window.innerWidth < 1024;
+    useEffect(() => {
+        const isDesktop = window.matchMedia(
+            "(min-width: 901px)"
+        ).matches;
 
-    if (isTouchDevice) {
-      restoreBrowserCursor();
+        // Mobile / Tablet
+        if (!isDesktop) {
+            restoreBrowserCursor();
+            return;
+        }
 
-      if (cursorRef.current) {
-        cursorRef.current.style.display = "none";
-      }
+        const initialPosition = getInitialPosition();
 
-      return;
-    }
+        let mouseX = initialPosition.x;
+        let mouseY = initialPosition.y;
 
-    const initialPosition = getInitialPosition();
+        let currentX = mouseX;
+        let currentY = mouseY;
 
-    let mouseX = initialPosition.x;
-    let mouseY = initialPosition.y;
+        let animationFrame: number | null = null;
 
-    let currentX = mouseX;
-    let currentY = mouseY;
+        let moveTimeout:
+            | ReturnType<typeof setTimeout>
+            | null = null;
 
-    let animationFrame: number;
-    let moveTimeout: ReturnType<typeof setTimeout>;
+        hideBrowserCursor();
 
-    hideBrowserCursor();
+        const handleMouseMove = (
+            event: MouseEvent
+        ): void => {
+            mouseX = event.clientX;
+            mouseY = event.clientY;
 
-    const handleMouseMove = (event: MouseEvent): void => {
-      mouseX = event.clientX;
-      mouseY = event.clientY;
+            setCursorColor(
+                cursorRef.current,
+                cursorData.colors.moving
+            );
 
-      setCursorColor(
-        cursorRef.current,
-        cursorData.colors.moving
-      );
+            if (moveTimeout !== null) {
+                clearTimeout(moveTimeout);
+            }
 
-      clearTimeout(moveTimeout);
+            moveTimeout = setTimeout(() => {
+                setCursorColor(
+                    cursorRef.current,
+                    cursorData.colors.default
+                );
+            }, cursorData.animation.returnDelay);
+        };
 
-      moveTimeout = setTimeout(() => {
-        setCursorColor(
-          cursorRef.current,
-          cursorData.colors.default
+        const animate = (): void => {
+            currentX +=
+                (mouseX - currentX) *
+                cursorData.animation.smoothness;
+
+            currentY +=
+                (mouseY - currentY) *
+                cursorData.animation.smoothness;
+
+            const cursor = cursorRef.current;
+
+            if (cursor) {
+                cursor.style.transform =
+                    getCursorTransform(
+                        currentX,
+                        currentY
+                    );
+            }
+
+            animationFrame =
+                requestAnimationFrame(animate);
+        };
+
+        document.addEventListener(
+            "mousemove",
+            handleMouseMove
         );
-      }, cursorData.animation.returnDelay);
-    };
 
-    const animate = (): void => {
-      currentX +=
-        (mouseX - currentX) *
-        cursorData.animation.smoothness;
+        animationFrame =
+            requestAnimationFrame(animate);
 
-      currentY +=
-        (mouseY - currentY) *
-        cursorData.animation.smoothness;
+        return () => {
+            document.removeEventListener(
+                "mousemove",
+                handleMouseMove
+            );
 
-      if (cursorRef.current) {
-        cursorRef.current.style.transform =
-          getCursorTransform(currentX, currentY);
-      }
+            if (animationFrame !== null) {
+                cancelAnimationFrame(
+                    animationFrame
+                );
+            }
 
-      animationFrame = requestAnimationFrame(animate);
-    };
+            if (moveTimeout !== null) {
+                clearTimeout(moveTimeout);
+            }
 
-    document.addEventListener(
-      "mousemove",
-      handleMouseMove
-    );
-
-    animationFrame = requestAnimationFrame(animate);
-
-    return () => {
-      document.removeEventListener(
-        "mousemove",
-        handleMouseMove
-      );
-
-      cancelAnimationFrame(animationFrame);
-      clearTimeout(moveTimeout);
-
-      restoreBrowserCursor();
-    };
-  }, [cursorRef]);
+            restoreBrowserCursor();
+        };
+    }, [cursorRef]);
 }
